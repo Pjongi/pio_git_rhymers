@@ -76,3 +76,5 @@ public class RhymersJUnitTest {
     }
 
 }
+// Projekt został zweryfikowany testami jednostkowymi po refaktoryzacji metody main w RhymersDemo.
+// Wszystkie testy przechodzą pomyślnie.
