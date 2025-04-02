@@ -3,23 +3,28 @@ package edu.kis.vh.nursery.list;
 /**
  * Implementacja stosu liczb całkowitych (int) przy użyciu dwukierunkowej listy powiązanej.
  * Przechowuje wskaźnik do ostatniego dodanego elementu (szczytu stosu).
- * Zapewnia podstawowe operacje stosu: push, pop, top, isEmpty.
+ * Zapewnia podstawowe operacje stosu: push, pop, top, isEmpty, isFull.
  *
  * Uwaga: Pole 'i' w tej klasie wydaje się być nieużywane.
  */
 public class IntLinkedList {
 
     /**
+     * Wartość zwracana przez top() i pop() gdy stos jest pusty.
+     */
+    private static final int EMPTY_STACK_VALUE = -1; // Stała z master (nazwa może być lepsza)
+
+    /**
      * Wskaźnik na ostatni (górny) węzeł na liście/stosie.
      * Jeśli lista jest pusta, ma wartość null.
      */
-    Node last;
+    private Node last; // Prywatne pole (z master), Javadoc z docs
 
     /**
      * Nieużywane pole klasy. Może być pozostałością lub błędem.
-     * Nie mylić z parametrem 'i' w metodzie push.
+     * Nie mylić z parametrem i w metodzie push.
      */
-    int i;
+    private int i; // Prywatne pole (z master), Javadoc z docs
 
     /**
      * Dodaje element całkowitoliczbowy na szczyt stosu (koniec listy).
@@ -27,13 +32,14 @@ public class IntLinkedList {
      * W przeciwnym razie, nowy węzeł jest dodawany po aktualnym ostatnim węźle,
      * a wskaźnik 'last' jest aktualizowany.
      *
-     * @param i Wartość całkowitoliczbowa do dodania na stos.
+     * @param value Wartość całkowitoliczbowa do dodania na stos. (zmieniono nazwę parametru dla jasności)
      */
-    public void push(int i) {
+    public void push(int value) { // Publiczne (z docs), Javadoc z docs
+        // Ciało metody było identyczne w obu gałęziach
         if (last == null)
-            last = new Node(i);
+            last = new Node(value);
         else {
-            last.next = new Node(i);
+            last.next = new Node(value);
             last.next.prev = last;
             last = last.next;
         }
@@ -45,7 +51,7 @@ public class IntLinkedList {
      * @return true, jeśli stos nie zawiera żadnych elementów (wskaźnik 'last' jest null),
      *         false w przeciwnym wypadku.
      */
-    public boolean isEmpty() {
+    public boolean isEmpty() { // Publiczne (nie było konfliktu)
         return last == null;
     }
 
@@ -56,7 +62,7 @@ public class IntLinkedList {
      *
      * @return Zawsze zwraca false.
      */
-    public boolean isFull() {
+    public boolean isFull() { // Publiczne (nie było konfliktu)
         return false;
     }
 
@@ -64,11 +70,11 @@ public class IntLinkedList {
      * Zwraca wartość elementu znajdującego się na szczycie stosu bez jego usuwania.
      *
      * @return Wartość całkowitoliczbowa elementu na szczycie stosu.
-     *         Zwraca -1, jeśli stos jest pusty (jest to umowna wartość błędu/pustki).
+     *         Zwraca EMPTY_STACK_VALUE (-1), jeśli stos jest pusty. // Używamy stałej
      */
-    public int top() {
+    public int top() { // Publiczne (z docs), Javadoc z docs
         if (isEmpty())
-            return -1;
+            return EMPTY_STACK_VALUE; // Użycie stałej (z master)
         return last.value;
     }
 
@@ -77,13 +83,28 @@ public class IntLinkedList {
      * Aktualizuje wskaźnik 'last', aby wskazywał na poprzedni element.
      *
      * @return Wartość całkowitoliczbowa elementu, który był na szczycie stosu.
-     *         Zwraca -1, jeśli stos był pusty przed operacją (umowna wartość błędu/pustki).
+     *         Zwraca EMPTY_STACK_VALUE (-1), jeśli stos był pusty przed operacją. // Używamy stałej
      */
-    public int pop() {
+    public int pop() { // Publiczne (z docs), Javadoc z docs
         if (isEmpty())
-            return -1;
+            return EMPTY_STACK_VALUE; // Użycie stałej (z master)
         int ret = last.value;
         last = last.prev;
+        // Można opcjonalnie wyzerować wskaźnik next poprzedniego elementu, jeśli istnieje
+        if (last != null) {
+            last.next = null;
+        }
         return ret;
     }
-}
+
+    // Zakładana wewnętrzna klasa Node (brak w kodzie konfliktu, ale potrzebna)
+    private static class Node {
+        int value;
+        Node prev;
+        Node next;
+
+        Node(int value) {
+            this.value = value;
+        }
+    }
+} // Jedna klamra zamykająca klasę
